@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS GAMES - Цифровой маркетплейс игр</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0e1a;
+            --secondary-bg: #151b2e;
+            --accent-cyan: #00f0ff;
+            --accent-pink: #ff006e;
+            --accent-purple: #8b5cf6;
+            --text-primary: #e0e7ff;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(21, 27, 46, 0.8);
+            --border-glow: rgba(0, 240, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Grid overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 240, 255, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8)); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 0.7rem 3rem 0.7rem 1rem;
+            border-radius: 25px;
+            color: var(--text-primary);
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            width: 300px;
+        }
+
+        .search-box::after {
+            content: '🔍';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .featured-game {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .featured-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .featured-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-cyan), white);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .featured-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+        }
+
+        .featured-price {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-cyan);
+        }
+
+        .discount {
+            background: var(--accent-pink);
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        /* Games Grid */
+        .games-section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 0.6rem 1.5rem;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            animation: cardSlideIn 0.5s ease-out backwards;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+        .game-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.3);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover .game-thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .game-tags {
+            display: flex;
+            gap: 0.4rem;
+            margin: 0.8rem 0;
+            flex-wrap: wrap;
+        }
+
+        .game-tag {
+            background: rgba(139, 92, 246, 0.2);
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: var(--accent-purple);
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .game-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .wishlist-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            color: var(--accent-pink);
+            transform: scale(1.2);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 14, 26, 0.95);
+            border-top: 1px solid var(--border-glow);
+            margin-top: 5rem;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-pink);
+            transform: rotate(90deg);
+        }
+
+        .modal-game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-game-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .modal-details {
+            margin: 2rem 0;
+        }
+
+        .modal-details p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-large {
+            padding: 1rem 3rem;
+            font-size: 1rem;
+        }
+
+        .purchase-tab {
+            color: var(--accent-pink) !important;
+            border: 1px solid rgba(255, 0, 110, 0.4);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease !important;
+            background: rgba(255, 0, 110, 0.05);
+        }
+        .purchase-tab:hover {
+            background: rgba(255, 0, 110, 0.15) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+        }
+        .purchase-tab::after { display: none !important; }
+
+        /* Purchase Modal */
+        .purchase-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .purchase-modal-overlay.active { display: flex; animation: fadeInOverlay 0.3s ease; }
+        .purchase-modal-box {
+            background: linear-gradient(160deg, rgba(21,27,46,0.99), rgba(10,14,26,0.99));
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 22px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 0, 110, 0.12), 0 25px 50px rgba(0,0,0,0.6);
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .purchase-close-btn {
+            position: absolute;
+            top: 1rem; right: 1.2rem;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .purchase-close-btn:hover { color: var(--accent-pink); transform: rotate(90deg); }
+        .purchase-modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .purchase-game-name {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: 1.8rem;
+        }
+        .purchase-game-name span {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        /* Step indicator */
+        .purchase-steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 2rem;
+        }
+        .step-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 2px solid rgba(255,255,255,0.15);
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+        .step-dot.active {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+            box-shadow: 0 0 12px rgba(255,0,110,0.4);
+        }
+        .step-dot.done {
+            background: var(--accent-pink);
+            border-color: var(--accent-pink);
+            color: white;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255,255,255,0.08);
+            transition: background 0.4s ease;
+        }
+        .step-line.done { background: var(--accent-pink); }
+        .step-label-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.8rem;
+            margin-top: -1rem;
+            padding: 0 2px;
+        }
+        .step-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 32px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .step-label.active { color: var(--accent-pink); }
+
+        /* Step panels */
+        .purchase-step-panel { display: none; }
+        .purchase-step-panel.active { display: block; animation: fadeInOverlay 0.3s ease; }
+
+        /* Card selector */
+        .card-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-option {
+            border: 2px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 1.4rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+        }
+        .card-option:hover {
+            border-color: rgba(255,0,110,0.4);
+            background: rgba(255,0,110,0.05);
+        }
+        .card-option.selected {
+            border-color: var(--accent-pink);
+            background: rgba(255,0,110,0.08);
+            box-shadow: 0 0 20px rgba(255,0,110,0.2);
+        }
+        .card-option .check {
+            position: absolute;
+            top: 0.5rem; right: 0.6rem;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--accent-pink);
+        }
+        .card-option.selected .check { opacity: 1; }
+        .card-logo {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            line-height: 1;
+        }
+        .card-logo-visa {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #1a1f71;
+            background: linear-gradient(135deg, #1a1f71, #007bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        .card-logo-mc {
+            display: block;
+            margin: 0 auto 0.5rem;
+            width: 46px; height: 28px;
+            position: relative;
+        }
+        .card-logo-mc::before, .card-logo-mc::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            top: 0;
+        }
+        .card-logo-mc::before { left: 0; background: #eb001b; }
+        .card-logo-mc::after { right: 0; background: #f79e1b; mix-blend-mode: multiply; }
+        .card-name {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Card form fields */
+        .p-field { margin-bottom: 1.1rem; }
+        .p-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        .p-field input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,0,110,0.2);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .p-field input:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 12px rgba(255,0,110,0.2);
+            background: rgba(255,0,110,0.03);
+        }
+        .p-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .purchase-total {
+            background: rgba(255,0,110,0.06);
+            border: 1px solid rgba(255,0,110,0.2);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.3rem;
+        }
+        .purchase-total-label { color: var(--text-secondary); font-size: 0.85rem; }
+        .purchase-total-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-pink);
+            font-weight: 700;
+        }
+        .purchase-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .purchase-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,0,110,0.4); }
+        .purchase-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .p-error {
+            color: var(--accent-pink);
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            min-height: 1em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .p-error.visible { opacity: 1; }
+
+        /* Success screen */
+        .purchase-success {
+            text-align: center;
+            padding: 1rem 0 0.5rem;
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .success-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+        .success-sub {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .success-game-badge {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            display: inline-block;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .success-done-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.4);
+            border-radius: 10px;
+            color: #10b981;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .success-done-btn:hover { background: rgba(16,185,129,0.25); }
+            color: var(--accent-cyan) !important;
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease !important;
+            background: rgba(0, 240, 255, 0.05);
+        }
+        .login-tab:hover {
+            background: rgba(0, 240, 255, 0.15) !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+        .login-tab::after { display: none !important; }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 25px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+        .user-badge .avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--accent-pink);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0;
+            margin-left: 0.3rem;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { opacity: 0.7; }
+
+        /* Login Modal */
+        .login-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-modal-overlay.active { display: flex; animation: fadeInOverlay 0.3s ease; }
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+        .login-modal-box {
+            background: linear-gradient(135deg, rgba(21, 27, 46, 0.98), rgba(10, 14, 26, 0.98));
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.15), 0 25px 50px rgba(0,0,0,0.5);
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .login-modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-modal-sub {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 2.5rem;
+        }
+        .login-field { margin-bottom: 1.3rem; }
+        .login-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .login-field input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .login-field input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.04);
+        }
+        .login-error {
+            color: var(--accent-pink);
+            font-size: 0.82rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            min-height: 1.2em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .login-error.visible { opacity: 1; }
+        .login-submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .login-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4); }
+        .login-hint {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 1.5rem;
+            opacity: 0.7;
+        }
+        .login-close-btn {
+            position: absolute;
+            top: 1rem; right: 1.2rem;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .login-close-btn:hover { color: var(--accent-pink); transform: rotate(90deg); }
+
+        /* Wishlist Panel */
+        .wishlist-overlay {
+            display: none;
+            position: fixed;
+            top: 0; right: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            z-index: 8000;
+        }
+        .wishlist-overlay.active { display: block; animation: fadeInOverlay 0.3s ease; }
+        .wishlist-panel {
+            position: absolute;
+            top: 0; right: 0;
+            width: 420px;
+            height: 100%;
+            background: linear-gradient(160deg, rgba(21,27,46,0.99), rgba(10,14,26,0.99));
+            border-left: 1px solid rgba(255, 0, 110, 0.35);
+            box-shadow: -10px 0 60px rgba(255, 0, 110, 0.12);
+            display: flex;
+            flex-direction: column;
+            animation: slideInRight 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .wishlist-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255,0,110,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .wishlist-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .wishlist-close {
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wishlist-close:hover { color: var(--accent-pink); transform: rotate(90deg); }
+        .wishlist-count {
+            background: var(--accent-pink);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .wishlist-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        .wishlist-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+        .wishlist-empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .wishlist-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,0,110,0.15);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        .wishlist-item:hover {
+            border-color: rgba(255,0,110,0.4);
+            background: rgba(255,0,110,0.04);
+        }
+        .wishlist-item-icon {
+            width: 55px; height: 55px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            flex-shrink: 0;
+        }
+        .wishlist-item-info { flex: 1; min-width: 0; }
+        .wishlist-item-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .wishlist-item-price {
+            color: var(--accent-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .wishlist-item-actions { display: flex; gap: 0.4rem; }
+        .wl-buy-btn {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+        .wl-buy-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,0,110,0.4); }
+        .wl-remove-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            padding: 0.45rem 0.6rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wl-remove-btn:hover { color: var(--accent-pink); border-color: rgba(255,0,110,0.4); }
+        .wishlist-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255,0,110,0.2);
+        }
+        .wl-clear-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,0,110,0.08);
+            border: 1px solid rgba(255,0,110,0.3);
+            border-radius: 10px;
+            color: var(--accent-pink);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .wl-clear-btn:hover { background: rgba(255,0,110,0.15); }
+
+        /* Wishlist nav badge */
+        .wishlist-nav-btn {
+            position: relative;
+            color: var(--text-secondary) !important;
+            transition: color 0.3s ease !important;
+            cursor: pointer;
+        }
+        .wishlist-nav-btn:hover { color: var(--accent-pink) !important; }
+        .wishlist-nav-btn::after { display: none !important; }
+        .wl-badge {
+            position: absolute;
+            top: -8px; right: -10px;
+            background: var(--accent-pink);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            display: none;
+        }
+        .wl-badge.visible { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .featured-game {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .search-box input {
+                width: 150px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">NEXUS</div>
+            <ul class="nav-links">
+                <li><a href="#" data-filter="all">Магазин</a></li>
+                <li><a href="#" data-filter="new">Новинки</a></li>
+                <li><a href="#" data-filter="sale">Скидки</a></li>
+                <li><a href="#" data-filter="popular">Популярное</a></li>
+                <li><a href="#" id="purchaseNavLink" class="purchase-tab" onclick="openPurchaseModal(event, 'Выбранная игра', '999')">🛒 Купить</a></li>
+                <li><a href="#" id="wishlistNavBtn" class="wishlist-nav-btn" onclick="openWishlist(event)">♥ Желаемое<span class="wl-badge" id="wlBadge">0</span></a></li>
+                <li><a href="#" id="loginNavLink" class="login-tab">🔐 Войти</a></li>
+            </ul>
+            <div class="user-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск игр..." id="searchInput">
+                </div>
+                <button class="btn btn-primary" id="loginBtnHeader" onclick="openLoginModal()">Войти</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="featured-game">
+            <div class="featured-image">🎮</div>
+            <div class="featured-content">
+                <h2>Cyber Strike: 2077</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+                    Погрузитесь в мир киберпанка будущего. Эпическая RPG с открытым миром, где каждое решение имеет значение.
+                </p>
+                <div class="featured-tags">
+                    <span class="tag">RPG</span>
+                    <span class="tag">Открытый мир</span>
+                    <span class="tag">Экшен</span>
+                    <span class="tag">Киберпанк</span>
+                </div>
+                <div class="featured-price">
+                    <span class="price">1 299 ₽</span>
+                    <span class="discount">-40%</span>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="showGameModal('Cyber Strike: 2077', '1 299', 'RPG, Открытый мир, Экшен')">Купить сейчас</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="games-section">
+        <div class="section-header">
+            <h2>Популярные игры</h2>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="new">Новинки</button>
+                <button class="filter-btn" data-filter="sale">Скидки</button>
+                <button class="filter-btn" data-filter="popular">Хиты</button>
+            </div>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <!-- Game cards will be generated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>О NEXUS</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Ведущая платформа для покупки и игры в цифровые игры. Тысячи игр для каждого геймера.
+                </p>
+                <div class="social-links">
+                    <a href="https://vk.com" target="_blank" rel="noopener" title="ВКонтакте">V</a>
+                    <a href="https://t.me" target="_blank" rel="noopener" title="Telegram">T</a>
+                    <a href="https://discord.com" target="_blank" rel="noopener" title="Discord">D</a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener" title="YouTube">Y</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Магазин</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="footerFilterGames(event,'all')">Все игры</a></li>
+                    <li><a href="#" onclick="footerFilterGames(event,'new')">Новинки</a></li>
+                    <li><a href="#" onclick="openInfoModal('preorder')">Предзаказы</a></li>
+                    <li><a href="#" onclick="footerFilterGames(event,'free')">Бесплатные игры</a></li>
+                    <li><a href="#" onclick="openInfoModal('dlc')">DLC и дополнения</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Поддержка</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openInfoModal('help')">Помощь</a></li>
+                    <li><a href="#" onclick="openInfoModal('returns')">Возвраты</a></li>
+                    <li><a href="#" onclick="openInfoModal('payment')">Способы оплаты</a></li>
+                    <li><a href="#" onclick="openInfoModal('faq')">FAQ</a></li>
+                    <li><a href="#" onclick="openInfoModal('contacts')">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Сообщество</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openInfoModal('forum')">Форум</a></li>
+                    <li><a href="#" onclick="openInfoModal('guides')">Гайды</a></li>
+                    <li><a href="#" onclick="openInfoModal('workshop')">Мастерская</a></li>
+                    <li><a href="#" onclick="openInfoModal('streams')">Трансляции</a></li>
+                    <li><a href="#" onclick="openInfoModal('rewards')">Награды</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 NEXUS GAMES. Все права защищены. Создано с использованием передовых веб-технологий.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 class="modal-game-title" id="modalTitle"></h2>
+            <div class="modal-game-image" id="modalImage">🎮</div>
+            <div class="modal-details">
+                <p><strong style="color: var(--accent-cyan);">Описание:</strong></p>
+                <p id="modalDescription">
+                    Захватывающая игра с потрясающей графикой и увлекательным геймплеем. 
+                    Отправьтесь в эпическое приключение и станьте легендой.
+                </p>
+                <p><strong style="color: var(--accent-cyan);">Жанры:</strong> <span id="modalTags"></span></p>
+                <p><strong style="color: var(--accent-cyan);">Платформы:</strong> Windows, macOS, Linux</p>
+                <p><strong style="color: var(--accent-cyan);">Разработчик:</strong> Nexus Studios</p>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <div class="game-price" style="font-size: 2rem;" id="modalPrice"></div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn" id="modalWishlistBtn" style="background: rgba(255, 0, 110, 0.2); color: var(--accent-pink);" onclick="toggleWishlistFromModal()">♡ В желаемое</button>
+                    <button class="btn btn-primary btn-large" onclick="openPurchaseModal(event, document.getElementById('modalTitle').textContent, document.getElementById('modalPrice').textContent)">Купить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Panel -->
+    <div class="wishlist-overlay" id="wishlistOverlay" onclick="closeWishlistOnOverlay(event)">
+        <div class="wishlist-panel">
+            <div class="wishlist-header">
+                <h2>♥ Список желаемого <span class="wishlist-count" id="wishlistCountLabel">0</span></h2>
+                <button class="wishlist-close" onclick="closeWishlist()">×</button>
+            </div>
+            <div class="wishlist-body" id="wishlistBody">
+                <div class="wishlist-empty" id="wishlistEmpty">
+                    <span class="empty-icon">🎮</span>
+                    <p style="font-family:'Orbitron',sans-serif; margin-bottom:0.5rem; color: var(--text-primary);">Список пуст</p>
+                    <p style="font-size:0.85rem;">Добавляйте игры, нажимая ♡ на карточках</p>
+                </div>
+                <div id="wishlistItems"></div>
+            </div>
+            <div class="wishlist-footer" id="wishlistFooter" style="display:none;">
+                <button class="wl-clear-btn" onclick="clearWishlist()">🗑 Очистить список</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="purchase-modal-overlay" id="purchaseModal">
+        <div class="purchase-modal-box">
+            <button class="purchase-close-btn" onclick="closePurchaseModal()">×</button>
+
+            <!-- Step indicator -->
+            <div class="purchase-modal-title">Оформление заказа</div>
+            <p class="purchase-game-name">Игра: <span id="purchaseGameName">—</span></p>
+
+            <div class="purchase-steps">
+                <div class="step-dot active" id="sd1">1</div>
+                <div class="step-line" id="sl1"></div>
+                <div class="step-dot" id="sd2">2</div>
+                <div class="step-line" id="sl2"></div>
+                <div class="step-dot" id="sd3">✓</div>
+            </div>
+            <div class="step-label-row">
+                <span class="step-label active" id="sl-1">Метод</span>
+                <span class="step-label" id="sl-2">Данные</span>
+                <span class="step-label" id="sl-3">Готово</span>
+            </div>
+
+            <!-- Step 1: Choose card -->
+            <div class="purchase-step-panel active" id="pstep1">
+                <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">Выберите способ оплаты:</p>
+                <div class="card-options">
+                    <div class="card-option" id="visa-opt" onclick="selectCard('visa')">
+                        <span class="check">✔</span>
+                        <span class="card-logo-visa">VISA</span>
+                        <span class="card-name">Visa</span>
+                    </div>
+                    <div class="card-option" id="mc-opt" onclick="selectCard('mastercard')">
+                        <span class="check">✔</span>
+                        <div class="card-logo-mc"></div>
+                        <span class="card-name">Mastercard</span>
+                    </div>
+                </div>
+                <div class="p-error" id="pErr1">Пожалуйста, выберите способ оплаты</div>
+                <button class="purchase-btn" onclick="goToStep2()">Продолжить →</button>
+            </div>
+
+            <!-- Step 2: Card details -->
+            <div class="purchase-step-panel" id="pstep2">
+                <div class="p-field">
+                    <label>Имя держателя карты</label>
+                    <input type="text" id="cardName" placeholder="IVAN PETROV" maxlength="26">
+                </div>
+                <div class="p-field">
+                    <label>Номер карты</label>
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="p-field-row">
+                    <div class="p-field">
+                        <label>Срок действия</label>
+                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="p-field">
+                        <label>CVV</label>
+                        <input type="password" id="cardCvv" placeholder="•••" maxlength="3">
+                    </div>
+                </div>
+                <div class="purchase-total">
+                    <span class="purchase-total-label">К оплате:</span>
+                    <span class="purchase-total-amount" id="purchaseTotalAmt">—</span>
+                </div>
+                <div class="p-error" id="pErr2">Пожалуйста, заполните все поля</div>
+                <button class="purchase-btn" onclick="goToStep3()">💳 Оплатить</button>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div class="purchase-step-panel" id="pstep3">
+                <div class="purchase-success">
+                    <span class="success-icon">🎉</span>
+                    <div class="success-title">Оплата прошла!</div>
+                    <p class="success-sub">Ваша покупка успешно оформлена.<br>Игра добавлена в вашу библиотеку.</p>
+                    <div class="success-game-badge">🎮 <span id="successGameName"></span></div>
+                    <button class="success-done-btn" onclick="closePurchaseModal()">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Purchase Modal ────────────────────────────────────────────
+        let selectedCard = null;
+        let purchaseCurrentStep = 1;
+
+        function openPurchaseModal(e, gameName, price) {
+            if (e) e.preventDefault();
+            selectedCard = null;
+            purchaseCurrentStep = 1;
+            document.getElementById('purchaseGameName').textContent = gameName || '—';
+            document.getElementById('purchaseTotalAmt').textContent = price || '—';
+            document.getElementById('successGameName').textContent = gameName || '—';
+            // reset selections
+            document.querySelectorAll('.card-option').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('.p-error').forEach(e => e.classList.remove('visible'));
+            // reset inputs
+            ['cardName','cardNumber','cardExpiry','cardCvv'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            setPurchaseStep(1);
+            document.getElementById('purchaseModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function selectCard(type) {
+            selectedCard = type;
+            document.getElementById('visa-opt').classList.toggle('selected', type === 'visa');
+            document.getElementById('mc-opt').classList.toggle('selected', type === 'mastercard');
+            document.getElementById('pErr1').classList.remove('visible');
+        }
+
+        function setPurchaseStep(step) {
+            purchaseCurrentStep = step;
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById('pstep' + i).classList.toggle('active', i === step);
+                const dot = document.getElementById('sd' + i);
+                dot.classList.remove('active', 'done');
+                if (i < step) dot.classList.add('done');
+                else if (i === step) dot.classList.add('active');
+                const lbl = document.getElementById('sl-' + i);
+                lbl.classList.toggle('active', i === step);
+            }
+            // lines
+            for (let i = 1; i <= 2; i++) {
+                document.getElementById('sl' + i).classList.toggle('done', i < step);
+            }
+        }
+
+        function goToStep2() {
+            if (!selectedCard) {
+                document.getElementById('pErr1').classList.add('visible');
+                return;
+            }
+            setPurchaseStep(2);
+        }
+
+        function goToStep3() {
+            const name = document.getElementById('cardName').value.trim();
+            const num = document.getElementById('cardNumber').value.trim();
+            const exp = document.getElementById('cardExpiry').value.trim();
+            const cvv = document.getElementById('cardCvv').value.trim();
+            if (!name || !num || !exp || !cvv) {
+                document.getElementById('pErr2').classList.add('visible');
+                return;
+            }
+            document.getElementById('pErr2').classList.remove('visible');
+            setPurchaseStep(3);
+        }
+
+        // Card number formatting
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = val.replace(/(.{4})/g, '$1 ').trim();
+        });
+        document.getElementById('cardExpiry').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (val.length >= 3) val = val.substring(0,2) + '/' + val.substring(2);
+            e.target.value = val;
+        });
+        document.getElementById('cardName').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Close on overlay click
+        document.getElementById('purchaseModal').addEventListener('click', function(e) {
+            if (e.target === this) closePurchaseModal();
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('purchaseModal').classList.contains('active')) {
+                closePurchaseModal();
+            }
+        });
+
+        // Wire purchase nav tab
+        document.getElementById('purchaseNavLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPurchaseModal(null, 'Выбранная игра', '999 ₽');
+        });
+    </script>
+
+    <!-- Login Modal -->
+    <div class="login-modal-overlay" id="loginModal">
+        <div class="login-modal-box">
+            <button class="login-close-btn" onclick="closeLoginModal()">×</button>
+            <div class="login-modal-title">NEXUS</div>
+            <p class="login-modal-sub">Войдите в свой аккаунт</p>
+            <div class="login-field">
+                <label>Логин</label>
+                <input type="text" id="loginUsername" placeholder="Введите логин" autocomplete="username">
+            </div>
+            <div class="login-field">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="loginError">Неверный логин или пароль</div>
+            <button class="login-submit-btn" onclick="handleLogin()">Войти</button>
+            <p class="login-hint">🔒 Администраторы будут перенаправлены в панель управления</p>
+        </div>
+    </div>
+
+    <script>
+        // ── Auth config ──────────────────────────────────────────────
+        const USERS = [
+            { username: 'admin', password: 'admin123', role: 'admin' },
+            { username: 'user',  password: 'user123',  role: 'user'  }
+        ];
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('loginUsername').focus();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('loginError').classList.remove('visible');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            const match = USERS.find(u => u.username === username && u.password === password);
+
+            if (!match) {
+                errorEl.classList.add('visible');
+                document.getElementById('loginPassword').value = '';
+                return;
+            }
+
+            errorEl.classList.remove('visible');
+            closeLoginModal();
+
+            if (match.role === 'admin') {
+                // Redirect to admin panel
+                window.location.href = 'admin-panel.html';
+            } else {
+                // Show user badge in header
+                setLoggedInState(match.username);
+            }
+        }
+
+        function setLoggedInState(username) {
+            const loginBtnHeader = document.getElementById('loginBtnHeader');
+            const loginNavLink = document.getElementById('loginNavLink');
+            const initials = username.substring(0, 2).toUpperCase();
+
+            loginBtnHeader.outerHTML = `
+                <div class="user-badge">
+                    <div class="avatar">${initials}</div>
+                    <span>${username}</span>
+                    <button class="logout-btn" onclick="handleLogout()">✕</button>
+                </div>`;
+
+            loginNavLink.textContent = '👤 ' + username;
+            loginNavLink.style.pointerEvents = 'none';
+        }
+
+        function handleLogout() {
+            location.reload();
+        }
+
+        // Allow Enter key to submit login
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginModal').classList.contains('active')) {
+                handleLogin();
+            }
+            if (e.key === 'Escape' && document.getElementById('loginModal').classList.contains('active')) {
+                closeLoginModal();
+            }
+        });
+
+        // Close on overlay click
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        // Wire nav login tab
+        document.getElementById('loginNavLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openLoginModal();
+        });
+
+        // Game data
+        const games = [
+            {
+                id: 1,
+                title: "Stellar Odyssey",
+                price: "999",
+                icon: "🚀",
+                tags: ["Стратегия", "Космос", "4X"],
+                category: "new",
+                description: "Исследуйте бесконечные просторы космоса в этой грандиозной космической стратегии."
+            },
+            {
+                id: 2,
+                title: "Shadow Legends",
+                price: "1499",
+                icon: "⚔️",
+                tags: ["RPG", "Фэнтези", "Мультиплеер"],
+                category: "popular",
+                description: "Эпическое фэнтези приключение в мире меча и магии."
+            },
+            {
+                id: 3,
+                title: "Velocity Racers",
+                price: "799",
+                icon: "🏎️",
+                tags: ["Гонки", "Аркада", "Мультиплеер"],
+                category: "sale",
+                description: "Футуристические гонки на максимальной скорости."
+            },
+            {
+                id: 4,
+                title: "Zombie Warfare",
+                price: "1199",
+                icon: "🧟",
+                tags: ["Шутер", "Выживание", "Хоррор"],
+                category: "popular",
+                description: "Выживайте в мире зомби-апокалипсиса."
+            },
+            {
+                id: 5,
+                title: "Empire Builder",
+                price: "899",
+                icon: "🏰",
+                tags: ["Стратегия", "Градостроитель", "Экономика"],
+                category: "new",
+                description: "Постройте величайшую империю в истории."
+            },
+            {
+                id: 6,
+                title: "Mystic Quest",
+                price: "1299",
+                icon: "🔮",
+                tags: ["RPG", "Приключения", "Магия"],
+                category: "sale",
+                description: "Откройте тайны древней магии в этом приключении."
+            },
+            {
+                id: 7,
+                title: "Battle Royale X",
+                price: "Бесплатно",
+                icon: "🎯",
+                tags: ["Шутер", "Battle Royale", "PvP"],
+                category: "popular",
+                description: "100 игроков, один победитель. Последний оставшийся в живых."
+            },
+            {
+                id: 8,
+                title: "Pixel Adventures",
+                price: "599",
+                icon: "👾",
+                tags: ["Платформер", "Инди", "Ретро"],
+                category: "new",
+                description: "Классический платформер в современной обертке."
+            },
+            {
+                id: 9,
+                title: "Cyber Hacker",
+                price: "1099",
+                icon: "💻",
+                tags: ["Симулятор", "Киберпанк", "Головоломка"],
+                category: "new",
+                description: "Станьте хакером в киберпанк мире будущего."
+            }
+        ];
+
+        // Render games
+        function renderGames(filter = 'all') {
+            const grid = document.getElementById('gamesGrid');
+            let filteredGames;
+            if (filter === 'all') filteredGames = games;
+            else if (filter === 'free') filteredGames = games.filter(g => g.price === 'Бесплатно');
+            else filteredGames = games.filter(g => g.category === filter);
+            
+            grid.innerHTML = filteredGames.map((game, index) => {
+                const inWishlist = wishlist.some(g => g.id === game.id);
+                return `
+                <div class="game-card" data-game-id="${game.id}" onclick="showGameModal('${game.title}', '${game.price}', '${game.tags.join(', ')}')">
+                    <div class="game-thumbnail" style="background: linear-gradient(${135 + index * 30}deg, hsl(${200 + index * 30}, 70%, 60%) 0%, hsl(${250 + index * 30}, 70%, 60%) 100%)">
+                        ${game.icon}
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">${game.price}${game.price !== 'Бесплатно' ? ' ₽' : ''}</span>
+                            <button class="wishlist-btn" style="color:${inWishlist ? 'var(--accent-pink)' : ''}" onclick="event.stopPropagation(); toggleWishlist(this, ${game.id})">${inWishlist ? '♥' : '♡'}</button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderGames(this.dataset.filter);
+            });
+        });
+
+        // Navigation filter
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const filter = this.dataset.filter;
+                if (filter) {
+                    const filterBtn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+                    if (filterBtn) {
+                        filterBtn.click();
+                        window.scrollTo({ top: document.querySelector('.games-section').offsetTop - 100, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.game-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.game-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Modal functions
+        function showGameModal(title, price, tags) {
+            const modal = document.getElementById('gameModal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalPrice').textContent = price + (price !== 'Бесплатно' ? ' ₽' : '');
+            document.getElementById('modalTags').textContent = tags;
+            
+            const game = games.find(g => g.title === title);
+            if (game) {
+                document.getElementById('modalImage').textContent = game.icon;
+                document.getElementById('modalDescription').textContent = game.description;
+                // Sync wishlist button
+                const wlBtn = document.getElementById('modalWishlistBtn');
+                const inWishlist = wishlist.some(g => g.id === game.id);
+                wlBtn.innerHTML = inWishlist ? '♥ В желаемом' : '♡ В желаемое';
+                wlBtn.style.background = inWishlist ? 'rgba(255,0,110,0.4)' : 'rgba(255,0,110,0.2)';
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on background click
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // ── Wishlist System ──────────────────────────────────────────
+        let wishlist = []; // Array of game objects
+
+        function getWishlistGame(gameId) {
+            return wishlist.find(g => g.id === gameId);
+        }
+
+        function toggleWishlist(btn, gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (!game) return;
+            const idx = wishlist.findIndex(g => g.id === gameId);
+            if (idx === -1) {
+                wishlist.push(game);
+                btn.textContent = '♥';
+                btn.style.color = 'var(--accent-pink)';
+                showWishlistToast(game.title, true);
+            } else {
+                wishlist.splice(idx, 1);
+                btn.textContent = '♡';
+                btn.style.color = 'var(--text-secondary)';
+                showWishlistToast(game.title, false);
+            }
+            updateWishlistBadge();
+        }
+
+        function toggleWishlistFromModal() {
+            const title = document.getElementById('modalTitle').textContent;
+            const game = games.find(g => g.title === title);
+            if (!game) return;
+            const btn = document.getElementById('modalWishlistBtn');
+            const idx = wishlist.findIndex(g => g.id === game.id);
+            if (idx === -1) {
+                wishlist.push(game);
+                btn.innerHTML = '♥ В желаемом';
+                btn.style.background = 'rgba(255,0,110,0.4)';
+                showWishlistToast(game.title, true);
+            } else {
+                wishlist.splice(idx, 1);
+                btn.innerHTML = '♡ В желаемое';
+                btn.style.background = 'rgba(255,0,110,0.2)';
+                showWishlistToast(game.title, false);
+            }
+            updateWishlistBadge();
+            // sync card button
+            syncCardWishlistBtn(game.id, idx === -1);
+        }
+
+        function syncCardWishlistBtn(gameId, added) {
+            const cards = document.querySelectorAll('.game-card');
+            cards.forEach(card => {
+                if (parseInt(card.dataset.gameId) === gameId) {
+                    const btn = card.querySelector('.wishlist-btn');
+                    if (btn) {
+                        btn.textContent = added ? '♥' : '♡';
+                        btn.style.color = added ? 'var(--accent-pink)' : '';
+                    }
+                }
+            });
+        }
+
+        function updateWishlistBadge() {
+            const count = wishlist.length;
+            const badge = document.getElementById('wlBadge');
+            badge.textContent = count;
+            badge.classList.toggle('visible', count > 0);
+        }
+
+        function openWishlist(e) {
+            if (e) e.preventDefault();
+            renderWishlistPanel();
+            document.getElementById('wishlistOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWishlist() {
+            document.getElementById('wishlistOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeWishlistOnOverlay(e) {
+            if (e.target === e.currentTarget) closeWishlist();
+        }
+
+        function renderWishlistPanel() {
+            const container = document.getElementById('wishlistItems');
+            const empty = document.getElementById('wishlistEmpty');
+            const footer = document.getElementById('wishlistFooter');
+            document.getElementById('wishlistCountLabel').textContent = wishlist.length;
+
+            if (wishlist.length === 0) {
+                empty.style.display = 'block';
+                container.innerHTML = '';
+                footer.style.display = 'none';
+                return;
+            }
+            empty.style.display = 'none';
+            footer.style.display = 'block';
+            container.innerHTML = wishlist.map((game, index) => `
+                <div class="wishlist-item" id="wl-item-${game.id}">
+                    <div class="wishlist-item-icon" style="background: linear-gradient(${135 + index * 30}deg, hsl(${200 + index * 30}, 70%, 60%) 0%, hsl(${250 + index * 30}, 70%, 60%) 100%)">
+                        ${game.icon}
+                    </div>
+                    <div class="wishlist-item-info">
+                        <div class="wishlist-item-title">${game.title}</div>
+                        <div class="wishlist-item-price">${game.price}${game.price !== 'Бесплатно' ? ' ₽' : ''}</div>
+                    </div>
+                    <div class="wishlist-item-actions">
+                        <button class="wl-buy-btn" onclick="buyFromWishlist(${game.id})">Купить</button>
+                        <button class="wl-remove-btn" onclick="removeFromWishlist(${game.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromWishlist(gameId) {
+            wishlist = wishlist.filter(g => g.id !== gameId);
+            updateWishlistBadge();
+            syncCardWishlistBtn(gameId, false);
+            // check if it's the current modal game
+            const modal = document.getElementById('gameModal');
+            if (modal.classList.contains('active')) {
+                const title = document.getElementById('modalTitle').textContent;
+                const game = games.find(g => g.id === gameId);
+                if (game && game.title === title) {
+                    const btn = document.getElementById('modalWishlistBtn');
+                    btn.innerHTML = '♡ В желаемое';
+                    btn.style.background = 'rgba(255,0,110,0.2)';
+                }
+            }
+            renderWishlistPanel();
+        }
+
+        function buyFromWishlist(gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (!game) return;
+            closeWishlist();
+            openPurchaseModal(null, game.title, game.price + (game.price !== 'Бесплатно' ? ' ₽' : ''));
+        }
+
+        function clearWishlist() {
+            wishlist.forEach(g => syncCardWishlistBtn(g.id, false));
+            wishlist = [];
+            updateWishlistBadge();
+            renderWishlistPanel();
+        }
+
+        // Toast notification
+        function showWishlistToast(title, added) {
+            let toast = document.getElementById('wlToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'wlToast';
+                toast.style.cssText = `
+                    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+                    background: rgba(21,27,46,0.97); border: 1px solid rgba(255,0,110,0.4);
+                    border-radius: 12px; padding: 0.8rem 1.5rem; z-index: 99999;
+                    font-family: 'Exo 2', sans-serif; font-size: 0.9rem; color: var(--text-primary);
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.5); transition: opacity 0.4s;
+                    white-space: nowrap;
+                `;
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = added
+                ? `♥ <strong style="color:var(--accent-pink)">${title}</strong> добавлена в желаемое`
+                : `✕ <strong style="color:var(--text-secondary)">${title}</strong> удалена из желаемого`;
+            toast.style.opacity = '1';
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+        }
+
+        // Initialize
+        renderGames();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+    <!-- Info Modal (Footer links) -->
+    <div class="info-modal-overlay" id="infoModal" onclick="closeInfoModal(event)">
+        <div class="info-modal-box">
+            <button class="info-modal-close" onclick="closeInfoModalDirect()">×</button>
+            <div id="infoModalContent"></div>
+        </div>
+    </div>
+
+    <style>
+        /* Info Modal */
+        .info-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(8px);
+            z-index: 7000;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-modal-overlay.active { display: flex; animation: fadeInOverlay 0.3s ease; }
+        .info-modal-box {
+            background: linear-gradient(160deg, rgba(21,27,46,0.99), rgba(10,14,26,0.99));
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.1), 0 25px 50px rgba(0,0,0,0.6);
+            animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .info-modal-close {
+            position: absolute;
+            top: 1rem; right: 1.2rem;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .info-modal-close:hover { color: var(--accent-pink); transform: rotate(90deg); }
+        .info-modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .info-modal-section {
+            margin-bottom: 1.5rem;
+        }
+        .info-modal-section h4 {
+            color: var(--accent-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+        }
+        .info-modal-section p, .info-modal-section li {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.92rem;
+        }
+        .info-modal-section ul { padding-left: 1.2rem; }
+        .info-modal-section li { margin-bottom: 0.4rem; }
+        .info-badge {
+            display: inline-block;
+            background: rgba(0,240,255,0.1);
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 8px;
+            padding: 0.3rem 0.8rem;
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem 0.2rem 0.2rem 0;
+        }
+        .info-badge.pink {
+            background: rgba(255,0,110,0.1);
+            border-color: rgba(255,0,110,0.3);
+            color: var(--accent-pink);
+        }
+        .info-badge.purple {
+            background: rgba(139,92,246,0.1);
+            border-color: rgba(139,92,246,0.3);
+            color: var(--accent-purple);
+        }
+        .info-contact-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0,240,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 0.7rem;
+        }
+        .info-contact-icon { font-size: 1.4rem; }
+        .info-contact-label { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-contact-value { color: var(--text-primary); font-weight: 600; }
+        .info-divider {
+            border: none;
+            border-top: 1px solid rgba(0,240,255,0.1);
+            margin: 1.2rem 0;
+        }
+        .forum-post {
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(0,240,255,0.08);
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            cursor: default;
+            transition: border-color 0.2s;
+        }
+        .forum-post:hover { border-color: rgba(0,240,255,0.25); }
+        .forum-post-title { color: var(--text-primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .forum-post-meta { color: var(--text-secondary); font-size: 0.75rem; }
+        .stream-card {
+            padding: 0.9rem 1rem;
+            background: rgba(255,0,110,0.05);
+            border: 1px solid rgba(255,0,110,0.15);
+            border-radius: 10px;
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .stream-live {
+            background: var(--accent-pink);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        .reward-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(139,92,246,0.1);
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
+        }
+        .reward-info { display: flex; align-items: center; gap: 0.7rem; }
+        .reward-icon { font-size: 1.3rem; }
+        .reward-name { color: var(--text-primary); font-size: 0.88rem; font-weight: 600; }
+        .reward-pts { color: var(--accent-purple); font-family: 'Orbitron', sans-serif; font-size: 0.85rem; }
+        .coming-soon-tag {
+            display: inline-block;
+            background: rgba(255,165,0,0.15);
+            border: 1px solid rgba(255,165,0,0.4);
+            color: #ffa500;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+    </style>
+
+    <script>
+        // ── Info Modal Data ─────────────────────────────────────────
+        const infoContent = {
+            preorder: {
+                title: '🎮 Предзаказы',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Как работают предзаказы</h4>
+                        <p>Оформите предзаказ на ещё не вышедшие игры и получите их в день релиза автоматически. Оплата списывается в день выхода игры.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Преимущества предзаказа</h4>
+                        <ul>
+                            <li>Скидка до <strong style="color:var(--accent-cyan)">20%</strong> по сравнению с ценой после выхода</li>
+                            <li>Эксклюзивные бонусы: скины, DLC, игровая валюта</li>
+                            <li>Гарантированный доступ в день релиза</li>
+                            <li>Отмена предзаказа в любой момент без комиссии</li>
+                        </ul>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Скоро в продаже</h4>
+                        <span class="info-badge">Nexus Prime 2 • Q3 2026</span>
+                        <span class="info-badge">Shadow Worlds • Q4 2026</span>
+                        <span class="info-badge">Quantum Break 2 • 2027</span>
+                    </div>`
+            },
+            free: {
+                title: '🆓 Бесплатные игры',
+                html: `
+                    <div class="info-modal-section">
+                        <p>На NEXUS представлено более <strong style="color:var(--accent-cyan)">150+</strong> бесплатных игр. Просто нажмите «Получить» и играйте!</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Категории</h4>
+                        <span class="info-badge">Battle Royale</span>
+                        <span class="info-badge">MOBA</span>
+                        <span class="info-badge">MMO</span>
+                        <span class="info-badge pink">Браузерные</span>
+                        <span class="info-badge purple">Инди</span>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Бесплатная игра месяца</h4>
+                        <p>Каждый месяц мы дарим одну платную игру бесплатно всем зарегистрированным пользователям. <strong style="color:var(--accent-pink)">Battle Royale X</strong> — игра этого месяца!</p>
+                    </div>`
+            },
+            dlc: {
+                title: '🧩 DLC и дополнения',
+                html: `
+                    <div class="info-modal-section">
+                        <p>Расширяйте свои любимые игры с помощью официальных дополнений, сезонных пропусков и косметических предметов.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Типы контента</h4>
+                        <ul>
+                            <li><strong style="color:var(--accent-cyan)">Сюжетные DLC</strong> — новые истории и локации</li>
+                            <li><strong style="color:var(--accent-cyan)">Season Pass</strong> — все DLC одним пакетом со скидкой</li>
+                            <li><strong style="color:var(--accent-cyan)">Косметика</strong> — скины, питомцы, эффекты</li>
+                            <li><strong style="color:var(--accent-cyan)">Саундтреки</strong> — официальная музыка игры</li>
+                        </ul>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Совместимость</h4>
+                        <p>Все DLC привязаны к аккаунту и доступны на всех ваших устройствах одновременно.</p>
+                    </div>`
+            },
+            help: {
+                title: '🆘 Помощь',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Быстрые ответы</h4>
+                        <ul>
+                            <li>Игра не запускается → проверьте системные требования и обновите драйверы</li>
+                            <li>Не приходит письмо → проверьте папку «Спам»</li>
+                            <li>Забыли пароль → используйте форму восстановления на странице входа</li>
+                            <li>Двойное списание → напишите нам, вернём в течение 24 ч</li>
+                        </ul>
+                    </div>
+                    <hr class="info-divider">
+                    <div class="info-modal-section">
+                        <h4>Связаться с поддержкой</h4>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">💬</span>
+                            <div><div class="info-contact-label">Онлайн-чат</div><div class="info-contact-value">Ежедневно 09:00 – 23:00</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">📧</span>
+                            <div><div class="info-contact-label">Email</div><div class="info-contact-value">support@nexusgames.ru</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">⏱</span>
+                            <div><div class="info-contact-label">Среднее время ответа</div><div class="info-contact-value">~2 часа</div></div>
+                        </div>
+                    </div>`
+            },
+            returns: {
+                title: '↩️ Возвраты',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Условия возврата</h4>
+                        <ul>
+                            <li>Возврат возможен в течение <strong style="color:var(--accent-cyan)">14 дней</strong> после покупки</li>
+                            <li>Игровое время не должно превышать <strong style="color:var(--accent-cyan)">2 часов</strong></li>
+                            <li>DLC и предметы внутри игры не подлежат возврату</li>
+                            <li>Бесплатные игры — без возврата</li>
+                        </ul>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Как оформить возврат</h4>
+                        <ul>
+                            <li>Зайдите в раздел «Мои покупки»</li>
+                            <li>Нажмите «Запросить возврат» рядом с игрой</li>
+                            <li>Укажите причину и подтвердите</li>
+                            <li>Средства вернутся на счёт за <strong style="color:var(--accent-pink)">3–5 рабочих дней</strong></li>
+                        </ul>
+                    </div>`
+            },
+            payment: {
+                title: '💳 Способы оплаты',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Банковские карты</h4>
+                        <span class="info-badge">Visa</span>
+                        <span class="info-badge">Mastercard</span>
+                        <span class="info-badge">МИР</span>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Электронные кошельки</h4>
+                        <span class="info-badge pink">ЮMoney</span>
+                        <span class="info-badge pink">QIWI</span>
+                        <span class="info-badge pink">SberPay</span>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Другие способы</h4>
+                        <span class="info-badge purple">NEXUS Баланс</span>
+                        <span class="info-badge purple">Подарочные карты</span>
+                        <span class="info-badge purple">Криптовалюта</span>
+                    </div>
+                    <hr class="info-divider">
+                    <div class="info-modal-section">
+                        <p>Все транзакции защищены протоколом <strong style="color:var(--accent-cyan)">SSL/TLS</strong>. Данные карт не хранятся на наших серверах.</p>
+                    </div>`
+            },
+            faq: {
+                title: '❓ FAQ',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Аккаунт и безопасность</h4>
+                        <p><strong style="color:var(--accent-cyan)">Сколько устройств?</strong><br>До 5 устройств одновременно на одном аккаунте.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <p><strong style="color:var(--accent-cyan)">Можно ли подарить игру?</strong><br>Да! На странице любой игры есть кнопка «Подарить». Введите логин или email получателя.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <p><strong style="color:var(--accent-cyan)">Игры навсегда?</strong><br>Да, все купленные игры остаются в вашей библиотеке навсегда, без подписки.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <p><strong style="color:var(--accent-cyan)">Офлайн-режим?</strong><br>Большинство игр поддерживают офлайн-игру после одной активации онлайн.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <p><strong style="color:var(--accent-cyan)">Нужна подписка?</strong><br>Нет. NEXUS работает без обязательной подписки. Платите только за игры.</p>
+                    </div>`
+            },
+            contacts: {
+                title: '📬 Контакты',
+                html: `
+                    <div class="info-modal-section">
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">📧</span>
+                            <div><div class="info-contact-label">Email поддержки</div><div class="info-contact-value">support@nexusgames.ru</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">📧</span>
+                            <div><div class="info-contact-label">Деловые вопросы</div><div class="info-contact-value">business@nexusgames.ru</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">📱</span>
+                            <div><div class="info-contact-label">Телефон</div><div class="info-contact-value">8-800-NEXUS-00 (бесплатно)</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">🏢</span>
+                            <div><div class="info-contact-label">Юридический адрес</div><div class="info-contact-value">Москва, ул. Цифровая, д. 2077</div></div>
+                        </div>
+                        <div class="info-contact-row">
+                            <span class="info-contact-icon">🕐</span>
+                            <div><div class="info-contact-label">Часы работы</div><div class="info-contact-value">Пн–Вс, 09:00–23:00 МСК</div></div>
+                        </div>
+                    </div>`
+            },
+            forum: {
+                title: '💬 Форум',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Горячие темы</h4>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🔥 Лучшие RPG 2026 — делимся впечатлениями</div>
+                            <div class="forum-post-meta">342 ответа · Обновлено 2 часа назад</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">⚙️ Настройки графики для слабых ПК</div>
+                            <div class="forum-post-meta">87 ответов · Обновлено вчера</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🎯 Поиск команды для Battle Royale X</div>
+                            <div class="forum-post-meta">214 ответа · Онлайн сейчас</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">💡 Идеи для будущих игр NEXUS Studios</div>
+                            <div class="forum-post-meta">156 ответов · Обновлено 3 дня назад</div>
+                        </div>
+                    </div>
+                    <div class="info-modal-section">
+                        <p style="font-size:0.85rem; color:var(--text-secondary)">Форум откроется в полноэкранном режиме после авторизации. <span class="coming-soon-tag">СКОРО</span></p>
+                    </div>`
+            },
+            guides: {
+                title: '📖 Гайды',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Популярные гайды</h4>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🚀 Stellar Odyssey — полное прохождение</div>
+                            <div class="forum-post-meta">⭐ 4.9 · Прочитано 12 тыс. раз</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">⚔️ Shadow Legends — билды для PvP</div>
+                            <div class="forum-post-meta">⭐ 4.8 · Прочитано 8 тыс. раз</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🏎️ Velocity Racers — секреты трасс</div>
+                            <div class="forum-post-meta">⭐ 4.7 · Прочитано 5 тыс. раз</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🧟 Zombie Warfare — выживание на харде</div>
+                            <div class="forum-post-meta">⭐ 4.9 · Прочитано 9 тыс. раз</div>
+                        </div>
+                    </div>
+                    <div class="info-modal-section">
+                        <p style="font-size:0.85rem;color:var(--text-secondary)">Создайте собственный гайд и получите <span class="info-badge purple">NEXUS Points</span></p>
+                    </div>`
+            },
+            workshop: {
+                title: '🔧 Мастерская',
+                html: `
+                    <div class="info-modal-section">
+                        <p>Мастерская — место, где игроки создают и делятся модификациями, картами, скинами и другим контентом.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Что можно публиковать</h4>
+                        <span class="info-badge">Моды</span>
+                        <span class="info-badge">Карты</span>
+                        <span class="info-badge pink">Скины</span>
+                        <span class="info-badge pink">Звуки</span>
+                        <span class="info-badge purple">Сценарии</span>
+                        <span class="info-badge purple">UI темы</span>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Топ этой недели</h4>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🗺️ Cyber City — новая карта для Battle Royale X</div>
+                            <div class="forum-post-meta">↓ 23 тыс. загрузок · ⭐ 4.9</div>
+                        </div>
+                        <div class="forum-post">
+                            <div class="forum-post-title">🎨 Neon Overhaul — ресурспак для Shadow Legends</div>
+                            <div class="forum-post-meta">↓ 15 тыс. загрузок · ⭐ 4.8</div>
+                        </div>
+                    </div>
+                    <div class="info-modal-section">
+                        <p style="font-size:0.85rem;color:var(--text-secondary)">Полный доступ к мастерской — после авторизации. <span class="coming-soon-tag">СКОРО</span></p>
+                    </div>`
+            },
+            streams: {
+                title: '📺 Трансляции',
+                html: `
+                    <div class="info-modal-section">
+                        <h4>Сейчас в эфире</h4>
+                        <div class="stream-card">
+                            <span class="stream-live">LIVE</span>
+                            <div>
+                                <div class="forum-post-title">ProGamer2077 играет в Shadow Legends</div>
+                                <div class="forum-post-meta">👁 4 821 зрителей</div>
+                            </div>
+                        </div>
+                        <div class="stream-card">
+                            <span class="stream-live">LIVE</span>
+                            <div>
+                                <div class="forum-post-title">NexusTV — официальный турнир Battle Royale X</div>
+                                <div class="forum-post-meta">👁 18 340 зрителей</div>
+                            </div>
+                        </div>
+                        <div class="stream-card">
+                            <span class="stream-live">LIVE</span>
+                            <div>
+                                <div class="forum-post-title">SpeedRun_RU — Stellar Odyssey любой%</div>
+                                <div class="forum-post-meta">👁 1 203 зрителей</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-modal-section">
+                        <p style="font-size:0.85rem;color:var(--text-secondary)">Начните свою трансляцию прямо на NEXUS — без сторонних сервисов. <span class="coming-soon-tag">СКОРО</span></p>
+                    </div>`
+            },
+            rewards: {
+                title: '🏆 Награды',
+                html: `
+                    <div class="info-modal-section">
+                        <p>Зарабатывайте <strong style="color:var(--accent-purple)">NEXUS Points</strong> за покупки, отзывы и активность. Обменивайте на скидки и эксклюзивные предметы.</p>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Как заработать очки</h4>
+                        <div class="reward-row">
+                            <div class="reward-info"><span class="reward-icon">🛒</span><span class="reward-name">Покупка игры</span></div>
+                            <span class="reward-pts">+100 pts / 100 ₽</span>
+                        </div>
+                        <div class="reward-row">
+                            <div class="reward-info"><span class="reward-icon">✍️</span><span class="reward-name">Написать отзыв</span></div>
+                            <span class="reward-pts">+50 pts</span>
+                        </div>
+                        <div class="reward-row">
+                            <div class="reward-info"><span class="reward-icon">👥</span><span class="reward-name">Пригласить друга</span></div>
+                            <span class="reward-pts">+500 pts</span>
+                        </div>
+                        <div class="reward-row">
+                            <div class="reward-info"><span class="reward-icon">🎮</span><span class="reward-name">Ежедневный вход</span></div>
+                            <span class="reward-pts">+10 pts</span>
+                        </div>
+                    </div>
+                    <div class="info-modal-section">
+                        <h4>Уровни</h4>
+                        <span class="info-badge">Новичок 0–999</span>
+                        <span class="info-badge pink">Игрок 1k–4999</span>
+                        <span class="info-badge purple">Мастер 5k+</span>
+                    </div>`
+            }
+        };
+
+        function openInfoModal(type) {
+            const data = infoContent[type];
+            if (!data) return;
+            document.getElementById('infoModalContent').innerHTML = `
+                <h2 class="info-modal-title">${data.title}</h2>
+                ${data.html}
+            `;
+            document.getElementById('infoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInfoModalDirect() {
+            document.getElementById('infoModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeInfoModal(e) {
+            if (e.target === e.currentTarget) closeInfoModalDirect();
+        }
+
+        function footerFilterGames(e, filter) {
+            e.preventDefault();
+            // Handle free games filter (show only free)
+            if (filter === 'free') {
+                const grid = document.getElementById('gamesGrid');
+                const freeGames = games.filter(g => g.price === 'Бесплатно');
+                if (freeGames.length === 0) {
+                    // fallback: show all and scroll
+                    document.querySelector('.filter-btn[data-filter="all"]').click();
+                } else {
+                    // Use renderGames with a temp filter
+                    const allFilterBtns = document.querySelectorAll('.filter-btn');
+                    allFilterBtns.forEach(b => b.classList.remove('active'));
+                    renderGames('free');
+                }
+            } else {
+                const filterBtn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+                if (filterBtn) filterBtn.click();
+            }
+            window.scrollTo({ top: document.querySelector('.games-section').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        // ESC closes info modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('infoModal').classList.contains('active')) {
+                closeInfoModalDirect();
+            }
+        });
+    </script>
+</body>
+</html>
